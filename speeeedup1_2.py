@@ -12,9 +12,9 @@ with open("config.txt", "r") as config:
     for line in config.readlines():
         line = line.split(": ")
 
-        if line[1] == "True":
+        if line[1].lower() == "True":
             cfg[line[0]] = True
-        elif line[1] == "False":
+        elif line[1].lower() == "False":
             cfg[line[0]] = False
         else:
             cfg[line[0]] = float(line[1])
