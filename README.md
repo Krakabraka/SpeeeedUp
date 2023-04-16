@@ -1,6 +1,9 @@
 # SpeeeedUp
 Program that you can use to make those "sped up/nightcore" videos
 
+**You need FFmpeg installed!**
+**SpeeeedUp runs on Python 3.9!**
+
 ## REQUIREMENTS:
 
 numba v0.56.4
