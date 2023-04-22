@@ -1,8 +1,8 @@
 # Imports
-from pydub import AudioSegment
+import soundfile as sf
+from pydub import AudioSegment as seg
 from pytube import YouTube
-import numpy as np
-import librosa.effects as e
+import pyrubberband as pyrb
 import os
 
 # Config loader
@@ -44,7 +44,7 @@ else:
     try:
         # This code downloads the video
         link = YouTube(link)
-        print("Downloading video...")
+        print("Downloading video... ")
         link = link.streams.filter(only_audio=True).first()
         link.download()
 
@@ -58,21 +58,22 @@ else:
 
 # Load the file
 print("Loading audio... ")
-try: a = AudioSegment.from_file("original.mp3", "mp3")
-except: a = AudioSegment.from_file("original.mp3", "mp4")
-# I have no idea how this code works, I copied it from the internet (https://stackoverflow.com/a/70528584/19847351) but it pitch-shifts the audio
-y = np.frombuffer(a._data, dtype=np.int16).astype(np.float32)/2**15
-if not cfg.get("Disable Pitch-Shift"):
-    print("Pitch-shifting... ")
-    y = e.pitch_shift(y, sr=a.frame_rate*2, n_steps=cfg.get("Speed Change"))
-if not cfg.get("Disable Speedup"):
-    print("Speeding up... ")
-    y = e.time_stretch(y, rate=1+(cfg.get("Speed Change")/12))
-a = AudioSegment(np.array(y * (1<<15), dtype=np.int16).tobytes(), frame_rate = a.frame_rate*2, sample_width=2, channels = 1)
+
+# Convert the mp3 to a wav because soundfile is a b**ch
+try: a = seg.from_file("original.mp3", "mp3")
+except: a = seg.from_file("original.mp3", "mp4") # some files are formatted as mp3's and some are mp4's so this try-except is here to fix that
+a.export("original.wav", format="wav")
+
+os.remove("original.mp3")
+y, sr = sf.read("original.wav")
+
+print("Modifying audio... ")
+if not cfg.get("Disable Speedup"): y = pyrb.time_stretch(y, sr, 1+(cfg.get("Speed Change")/12))
+if not cfg.get("Disable Pitch-Shift"): y = pyrb.pitch_shift(y, sr, cfg.get("Speed Change"))
 
 print("Writing to file... ")
 
 # Export the file
-a.export(f"{title}.mp3", format="mp3")
-os.remove("original.mp3")
-print(f"Saved as {title}.mp3.")
+sf.write(f"{title}.wav", y, sr)
+os.remove("original.wav")
+print(f"Saved as {title}.wav.")
