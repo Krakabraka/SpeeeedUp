@@ -1,17 +1,18 @@
 # SpeeeedUp
+
 Program that you can use to make those "sped up/nightcore" videos
 
-**You need FFmpeg installed! SpeeeedUp runs on Python 3.9!**
+**You need FFmpeg installed! You need rubberband installed! SpeeeedUp has only been tested for Windows 10 and higher!**
 
-## REQUIREMENTS:
+## SETUP
 
-numba v0.56.4
+Please run `py -m pip install -r .\requirements.txt` after downloading the files.
 
-pydub v0.25.1
+Then, download [rubberband](https://breakfastquay.com/files/releases/rubberband-1.9.2-gpl-executable-windows.zip).
 
-pytube v12.1.3
+Then, download [FFmpeg](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip).
 
-librosa v0.10.0
+Add them both to your PATH and you should be good to go. Please open an issue on the GitHub page if you encounter one.
 
 ## CONFIG
 
